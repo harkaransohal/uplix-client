@@ -69,7 +69,7 @@ const HeroSection = () => {
                   className="inline-flex items-center space-x-2"
                 >
                   <Github className="w-5 h-5" />
-                  <span>Get Started</span>
+                  <span>Join Waitlist</span>
                   <motion.div
                     className="ml-1"
                     animate={{ x: [0, 4, 0] }}
