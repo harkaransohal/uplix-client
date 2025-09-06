@@ -3,7 +3,6 @@ import axios from "axios";
 export const joinWaitlist = async (email: string) => {
   try {
     const url = `${import.meta.env.VITE_WAITLIST_URL}/hackathon/waitlist`
-    console.log(url)
     const response = await axios.post(url, { email });
     console.log(response)
     return response.data;
