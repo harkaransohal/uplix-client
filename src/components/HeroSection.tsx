@@ -85,26 +85,6 @@ const HeroSection = () => {
               </Button>
             </motion.div>
 
-            {/* Stats */}
-            <motion.div
-              initial={{ opacity: 0, y: 20 }}
-              animate={{ opacity: 1, y: 0 }}
-              transition={{ duration: 0.6, delay: 1 }}
-              className="flex space-x-8 pt-8"
-            >
-              <div>
-                <div className="text-3xl font-bold gradient-text">1000+</div>
-                <div className="text-sm text-muted-foreground">Repos Analyzed</div>
-              </div>
-              <div>
-                <div className="text-3xl font-bold gradient-text">95%</div>
-                <div className="text-sm text-muted-foreground">Accuracy Rate</div>
-              </div>
-              <div>
-                <div className="text-3xl font-bold gradient-text">5sec</div>
-                <div className="text-sm text-muted-foreground">Average Scan Time</div>
-              </div>
-            </motion.div>
           </motion.div>
 
           {/* Right: Hero Image */}
