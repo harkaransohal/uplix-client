@@ -19,7 +19,7 @@ const App = () => (
       <BrowserRouter>
         <Routes>
           <Route path="/" element={<Index />} />
-          <Route path="/soha0021bhas0011" element={<RepositoryInfo />} />
+          <Route path="/get-score" element={<RepositoryInfo />} />
           <Route path="/scored-repos" element={<ScoredRepos />} />
           <Route path="/waitlist" element={<Waitlist />} />
           {/* ADD ALL CUSTOM ROUTES ABOVE THE CATCH-ALL "*" ROUTE */}
