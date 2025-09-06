@@ -59,7 +59,6 @@ const CTASection = () => {
             className="inline-flex items-center space-x-2 bg-primary/10 text-primary px-4 py-2 rounded-full text-sm font-medium border border-primary/20"
           >
             <Star className="w-4 h-4 fill-current" />
-            <span>Trusted by 1000+ developers</span>
           </motion.div>
 
           {/* Main Heading */}

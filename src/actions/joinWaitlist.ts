@@ -2,7 +2,9 @@ import axios from "axios";
 
 export const joinWaitlist = async (email: string) => {
   try {
-    const response = await axios.post("https://jun-greek-spectrum-li.trycloudflare.com/hackathon/waitlist", { email });
+    const url = `${import.meta.env.VITE_WAITLIST_URL}/hackathon/waitlist`
+    console.log(url)
+    const response = await axios.post(url, { email });
     console.log(response)
     return response.data;
   } catch (error: any) {
