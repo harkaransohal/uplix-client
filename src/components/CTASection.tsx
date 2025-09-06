@@ -1,23 +1,37 @@
 import { motion } from "framer-motion";
-import { ArrowRight, Github, Star, Mail } from "lucide-react";
+import { ArrowRight, Star, Mail } from "lucide-react";
 import { Button } from "@/components/ui/button";
 import { Input } from "@/components/ui/input";
 import { useState } from "react";
+import { joinWaitlist } from "@/actions/joinWaitlist";
 
 const CTASection = () => {
   const [email, setEmail] = useState("");
   const [isSubmitted, setIsSubmitted] = useState(false);
   const [isLoading, setIsLoading] = useState(false);
+  const [error, setError] = useState("");
 
   const handleSubmit = async (e: React.FormEvent) => {
     e.preventDefault();
     if (!email) return;
-    
+
     setIsLoading(true);
-    // Simulate API call
-    await new Promise(resolve => setTimeout(resolve, 1000));
-    setIsSubmitted(true);
-    setIsLoading(false);
+    setError("");
+
+    try {
+      const joinWaitlistResult = await joinWaitlist(email)
+
+      if (joinWaitlistResult?.success) {
+        setIsSubmitted(true);
+        setEmail("");
+      } else {
+        setError(joinWaitlistResult.error);
+      }
+    } catch {
+      setError("Server error. Try again later.");
+    } finally {
+      setIsLoading(false);
+    }
   };
 
   return (
@@ -76,11 +90,9 @@ const CTASection = () => {
             viewport={{ once: true }}
             className="text-xl text-muted-foreground max-w-2xl mx-auto leading-relaxed"
           >
-            {isSubmitted ? (
-              "We'll notify you as soon as Uplix is ready to analyze your repositories. In the meantime, we're building something amazing!"
-            ) : (
-              "Be the first to experience AI-powered repository scoring. Get early access and help shape the future of code evaluation."
-            )}
+            {isSubmitted
+              ? "We'll notify you as soon as Uplix is ready to analyze your repositories. In the meantime, we're building something amazing!"
+              : "Be the first to experience AI-powered repository scoring. Get early access and help shape the future of code evaluation."}
           </motion.p>
 
           {/* Waitlist Form */}
@@ -105,7 +117,7 @@ const CTASection = () => {
                     className="pl-12 pr-4 py-3 h-12 rounded-full bg-card border-border/50 focus:border-primary/50 text-foreground placeholder:text-muted-foreground"
                   />
                 </div>
-                <Button 
+                <Button
                   type="submit"
                   disabled={isLoading || !email}
                   className="btn-primary rounded-full px-8 py-3 h-12 font-semibold min-w-[140px] group"
@@ -122,10 +134,10 @@ const CTASection = () => {
                         <span>Join Waitlist</span>
                         <motion.div
                           animate={{ x: [0, 4, 0] }}
-                          transition={{ 
-                            repeat: Infinity, 
+                          transition={{
+                            repeat: Infinity,
                             duration: 1.5,
-                            ease: "easeInOut"
+                            ease: "easeInOut",
                           }}
                         >
                           <ArrowRight className="w-4 h-4" />
@@ -138,6 +150,9 @@ const CTASection = () => {
               <p className="text-sm text-muted-foreground mt-3 text-center">
                 No spam, just updates on our launch progress
               </p>
+              {error && (
+                <p className="mt-3 text-sm text-red-500 text-center">{error}</p>
+              )}
             </motion.form>
           ) : (
             <motion.div
@@ -150,7 +165,9 @@ const CTASection = () => {
                 <div className="w-16 h-16 bg-primary/20 rounded-full flex items-center justify-center mx-auto mb-4">
                   <Mail className="w-8 h-8 text-primary" />
                 </div>
-                <p className="text-foreground font-semibold mb-2">You're on the list!</p>
+                <p className="text-foreground font-semibold mb-2">
+                  You're on the list!
+                </p>
                 <p className="text-sm text-muted-foreground">
                   We'll send you an email when Uplix launches
                 </p>
