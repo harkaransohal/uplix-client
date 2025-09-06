@@ -116,33 +116,6 @@ const FeaturesSection = () => {
           ))}
         </div>
 
-        {/* Bottom Stats */}
-        <motion.div
-          initial={{ opacity: 0, y: 30 }}
-          whileInView={{ opacity: 1, y: 0 }}
-          transition={{ duration: 0.6, delay: 0.6 }}
-          viewport={{ once: true }}
-          className="grid grid-cols-2 md:grid-cols-4 gap-8 mt-16 pt-16 border-t border-border/50"
-        >
-          {[
-            { label: "Repositories Analyzed", value: "1,247+" },
-            { label: "Average Score Improvement", value: "23%" },
-            { label: "Hackathons Supported", value: "50+" },
-            { label: "Developer Satisfaction", value: "98%" }
-          ].map((stat, index) => (
-            <motion.div
-              key={index}
-              initial={{ opacity: 0, scale: 0.5 }}
-              whileInView={{ opacity: 1, scale: 1 }}
-              transition={{ duration: 0.4, delay: index * 0.1 }}
-              viewport={{ once: true }}
-              className="text-center"
-            >
-              <div className="text-3xl font-bold gradient-text mb-2">{stat.value}</div>
-              <div className="text-sm text-muted-foreground">{stat.label}</div>
-            </motion.div>
-          ))}
-        </motion.div>
       </div>
     </section>
   );
