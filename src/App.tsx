@@ -6,6 +6,7 @@ import { BrowserRouter, Routes, Route } from "react-router-dom";
 import Index from "./pages/Index";
 import RepositoryInfo from "./pages/RepositoryInfo";
 import ScoredRepos from "./pages/ScoredRepos";
+import Waitlist from "./pages/Waitlist";
 import NotFound from "./pages/NotFound";
 
 const queryClient = new QueryClient();
@@ -20,6 +21,7 @@ const App = () => (
           <Route path="/" element={<Index />} />
           <Route path="/soha0021bhas0011" element={<RepositoryInfo />} />
           <Route path="/scored-repos" element={<ScoredRepos />} />
+          <Route path="/waitlist" element={<Waitlist />} />
           {/* ADD ALL CUSTOM ROUTES ABOVE THE CATCH-ALL "*" ROUTE */}
           <Route path="*" element={<NotFound />} />
         </Routes>
