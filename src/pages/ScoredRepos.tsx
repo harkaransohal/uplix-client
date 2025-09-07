@@ -1,6 +1,12 @@
 import { useEffect, useState } from "react";
 import { motion } from "framer-motion";
-import { Card, CardContent, CardHeader, CardTitle, CardDescription } from "@/components/ui/card";
+import {
+  Card,
+  CardContent,
+  CardHeader,
+  CardTitle,
+  CardDescription,
+} from "@/components/ui/card";
 import { Button } from "@/components/ui/button";
 import { Badge } from "@/components/ui/badge";
 import { Calendar, ExternalLink, Github } from "lucide-react";
@@ -30,10 +36,11 @@ interface RepoResponse {
   score: Score;
 }
 
-const getScoreColor = (score: number) => {
-  if (score >= 90) return "text-green-600 bg-green-50 border-green-200";
-  if (score >= 80) return "text-blue-600 bg-blue-50 border-blue-200";
-  if (score >= 70) return "text-yellow-600 bg-yellow-50 border-yellow-200";
+const getScoreColor = (score: number, isTenScale = false) => {
+  const value = isTenScale ? score * 10 : score; // normalize 1–10 to 10–100
+  if (value >= 90) return "text-green-600 bg-green-50 border-green-200";
+  if (value >= 80) return "text-blue-600 bg-blue-50 border-blue-200";
+  if (value >= 70) return "text-yellow-600 bg-yellow-50 border-yellow-200";
   return "text-red-600 bg-red-50 border-red-200";
 };
 
@@ -54,7 +61,7 @@ const ScoredRepos = () => {
         if (!res.ok) throw new Error("Failed to fetch scored repos");
 
         const data: RepoResponse[] = await res.json();
-        console.log(data)
+        console.log(data);
         setRepos(data);
       } catch (err) {
         console.error("Error fetching scored repos:", err);
@@ -81,7 +88,8 @@ const ScoredRepos = () => {
               Repository Scores
             </h1>
             <p className="text-xl text-muted-foreground max-w-2xl mx-auto">
-              Track your repositories' performance and get insights to improve your code quality
+              Track your repositories' performance and get insights to improve
+              your code quality
             </p>
           </motion.div>
 
@@ -112,7 +120,8 @@ const ScoredRepos = () => {
                         <div className="flex-1">
                           <CardTitle className="text-xl mb-2 flex items-center gap-2">
                             <Github className="w-5 h-5 text-muted-foreground" />
-                            {repo.gitUrl.split("/").slice(-1)[0]} {/* repo name from URL */}
+                            {repo.gitUrl.split("/").slice(-1)[0]}{" "}
+                            {/* repo name from URL */}
                           </CardTitle>
                           <CardDescription className="text-sm leading-relaxed">
                             {repo.liveUrl}
@@ -120,10 +129,11 @@ const ScoredRepos = () => {
                         </div>
                         <div
                           className={`rounded-full px-3 py-1 text-sm font-semibold border ${getScoreColor(
-                            repo.score.repoScore
+                            repo.score.repoScore,
+                            true // ✅ mark as 1–10 scale
                           )}`}
                         >
-                          {repo.score.repoScore}/100
+                          {repo.score.repoScore}/10
                         </div>
                       </div>
                     </CardHeader>
