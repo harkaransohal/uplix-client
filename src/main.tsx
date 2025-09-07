@@ -1,14 +1,19 @@
 import { createRoot } from "react-dom/client";
 import App from "./App.tsx";
 import "./index.css";
-// import { ClerkProvider } from '@clerk/clerk-react'
+import { ClerkProvider } from "@clerk/clerk-react";
 import { StrictMode } from "react";
 
-// Commented out for now
-// const PUBLISHABLE_KEY = "pk_test_random_key_value_12345"
+const PUBLISHABLE_KEY = import.meta.env.VITE_CLERK_PUBLISHABLE_KEY;
 
-createRoot(document.getElementById('root')!).render(
+if (!PUBLISHABLE_KEY) {
+  throw new Error("Missing Clerk Publishable Key");
+}
+
+createRoot(document.getElementById("root")!).render(
   <StrictMode>
-    <App />
-  </StrictMode>,
-)
+    <ClerkProvider publishableKey={PUBLISHABLE_KEY}>
+      <App />
+    </ClerkProvider>
+  </StrictMode>
+);

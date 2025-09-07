@@ -5,12 +5,15 @@ import { Button } from "@/components/ui/button";
 import { Input } from "@/components/ui/input";
 import { Github, ArrowRight, Loader2, CheckCircle2 } from "lucide-react";
 import AppNavbar from "@/components/AppNavbar";
+import { useAuth, useUser } from "@clerk/clerk-react";
 
 const RepositoryInfo = () => {
   const [repoUrl, setRepoUrl] = useState("");
   const [status, setStatus] = useState<"idle" | "submitting" | "submitted">(
     "idle"
   );
+
+  const {user} = useUser();
 
   const handleSubmit = async (e: React.FormEvent) => {
     e.preventDefault();
@@ -20,10 +23,10 @@ const RepositoryInfo = () => {
 
     try {
       // 👉 Send request to backend
-      await fetch(`${import.meta.env.VITE_BACKEND_URL}/analyze`, {
+      await fetch(`${import.meta.env.VITE_BACKEND_URL}/hackathon/score`, {
         method: "POST",
         headers: { "Content-Type": "application/json" },
-        body: JSON.stringify({ repoUrl }),
+        body: JSON.stringify({ repoUrl, email: user.emailAddresses[0].emailAddress }),
       });
 
       // ✅ Show confirmation immediately

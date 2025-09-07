@@ -2,6 +2,7 @@ import { motion } from "framer-motion";
 import { Button } from "@/components/ui/button";
 import { Link, useLocation } from "react-router-dom";
 import { ArrowLeft, Database, FileText, Users } from "lucide-react";
+import { UserButton } from "@clerk/clerk-react";
 
 const AppNavbar = () => {
   const location = useLocation();
@@ -67,6 +68,7 @@ const AppNavbar = () => {
               <Database className="w-4 h-4" />
             </Button>
           </div>
+          <UserButton />
         </div>
       </div>
     </motion.nav>

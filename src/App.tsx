@@ -2,7 +2,9 @@ import { Toaster } from "@/components/ui/toaster";
 import { Toaster as Sonner } from "@/components/ui/sonner";
 import { TooltipProvider } from "@/components/ui/tooltip";
 import { QueryClient, QueryClientProvider } from "@tanstack/react-query";
-import { BrowserRouter, Routes, Route } from "react-router-dom";
+import { BrowserRouter, Routes, Route, Navigate } from "react-router-dom";
+import { SignedIn, SignedOut, RedirectToSignIn } from "@clerk/clerk-react";
+
 import Index from "./pages/Index";
 import RepositoryInfo from "./pages/RepositoryInfo";
 import ScoredRepos from "./pages/ScoredRepos";
@@ -19,12 +21,65 @@ const App = () => (
       <Sonner />
       <BrowserRouter>
         <Routes>
-          <Route path="/" element={<Index />} />
-          <Route path="/get-score" element={<RepositoryInfo />} />
-          <Route path="/scored-repos" element={<ScoredRepos />} />
-          <Route path="/scored-repos/:id" element={<RepoDetail />} />
+          {/* Landing Page: only visible if signed out */}
+          <Route
+            path="/"
+            element={
+              <>
+                <SignedOut>
+                  <Index />
+                </SignedOut>
+                <SignedIn>
+                  <Navigate to="/get-score" replace />
+                </SignedIn>
+              </>
+            }
+          />
+
           <Route path="/waitlist" element={<Waitlist />} />
-          {/* ADD ALL CUSTOM ROUTES ABOVE THE CATCH-ALL "*" ROUTE */}
+
+          {/* Protected routes */}
+          <Route
+            path="/get-score"
+            element={
+              <>
+                <SignedIn>
+                  <RepositoryInfo />
+                </SignedIn>
+                <SignedOut>
+                  <RedirectToSignIn />
+                </SignedOut>
+              </>
+            }
+          />
+          <Route
+            path="/scored-repos"
+            element={
+              <>
+                <SignedIn>
+                  <ScoredRepos />
+                </SignedIn>
+                <SignedOut>
+                  <RedirectToSignIn />
+                </SignedOut>
+              </>
+            }
+          />
+          <Route
+            path="/scored-repos/:id"
+            element={
+              <>
+                <SignedIn>
+                  <RepoDetail />
+                </SignedIn>
+                <SignedOut>
+                  <RedirectToSignIn />
+                </SignedOut>
+              </>
+            }
+          />
+
+          {/* Catch-all */}
           <Route path="*" element={<NotFound />} />
         </Routes>
       </BrowserRouter>
