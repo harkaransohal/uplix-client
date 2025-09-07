@@ -1,12 +1,18 @@
 import { motion } from "framer-motion";
 import { Button } from "@/components/ui/button";
 import { Link, useLocation } from "react-router-dom";
-import { ArrowLeft, Database, FileText, Users } from "lucide-react";
+import { ArrowLeft, FileText, Database, Users, Menu } from "lucide-react";
 import { UserButton } from "@clerk/clerk-react";
+import {
+  Sheet,
+  SheetContent,
+  SheetHeader,
+  SheetTrigger,
+} from "@/components/ui/sheet";
 
 const AppNavbar = () => {
   const location = useLocation();
-  
+
   const navItems = [
     { href: "/get-score", label: "Get Score", icon: FileText },
     { href: "/scored-repos", label: "Scored Repos", icon: Database },
@@ -14,7 +20,7 @@ const AppNavbar = () => {
   ];
 
   return (
-    <motion.nav 
+    <motion.nav
       initial={{ opacity: 0, y: -20 }}
       animate={{ opacity: 1, y: 0 }}
       transition={{ duration: 0.6 }}
@@ -36,7 +42,7 @@ const AppNavbar = () => {
               </Link>
             </Button>
             <div className="h-6 w-px bg-border" />
-            <motion.div 
+            <motion.div
               className="text-xl font-bold gradient-text"
               whileHover={{ scale: 1.05 }}
             >
@@ -44,9 +50,10 @@ const AppNavbar = () => {
             </motion.div>
           </div>
 
-          {/* Navigation Links */}
+          {/* Desktop Nav */}
           <div className="hidden md:flex items-center space-x-1">
-            {navItems.map(({ href, label, icon: Icon }) => (
+            <div className="menu-item pr-3">
+              {navItems.map(({ href, label, icon: Icon }) => (
               <Button
                 key={href}
                 variant={location.pathname === href ? "secondary" : "ghost"}
@@ -60,15 +67,42 @@ const AppNavbar = () => {
                 </Link>
               </Button>
             ))}
+            </div>
+            <UserButton />
           </div>
 
-          {/* Mobile menu placeholder */}
-          <div className="md:hidden">
-            <Button variant="ghost" size="sm">
-              <Database className="w-4 h-4" />
-            </Button>
+          {/* Mobile Nav */}
+          <div className="md:hidden flex items-center gap-2">
+            <Sheet>
+              <SheetTrigger asChild>
+                <Button variant="ghost" size="sm">
+                  <Menu className="w-5 h-5" />
+                </Button>
+              </SheetTrigger>
+              <SheetContent side="right" className="w-64">
+                <SheetHeader>
+                  <h2 className="text-lg font-bold">Navigation</h2>
+                </SheetHeader>
+                <div className="mt-6 flex flex-col gap-3">
+                  {navItems.map(({ href, label, icon: Icon }) => (
+                    <Button
+                      key={href}
+                      variant={location.pathname === href ? "secondary" : "ghost"}
+                      asChild
+                      className="justify-start"
+                    >
+                      <Link to={href} className="flex items-center gap-2">
+                        <Icon className="w-4 h-4" />
+                        {label}
+                      </Link>
+                    </Button>
+                  ))}
+                </div>
+              </SheetContent>
+            </Sheet>
+
+            <UserButton />
           </div>
-          <UserButton />
         </div>
       </div>
     </motion.nav>

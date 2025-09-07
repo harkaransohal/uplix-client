@@ -21,7 +21,7 @@ const Navbar = () => {
 
           {/* Navigation Links */}
           <div className="hidden md:flex items-center space-x-8">
-            <a href="#home" className="text-foreground/80 hover:text-foreground transition-colors">
+            <a href="/" className="text-foreground/80 hover:text-foreground transition-colors">
               Home
             </a>
             <a href="#how-it-works" className="text-foreground/80 hover:text-foreground transition-colors">

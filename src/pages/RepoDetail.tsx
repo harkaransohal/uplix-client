@@ -1,218 +1,188 @@
 import { useParams, Link } from "react-router-dom";
-import { motion } from "framer-motion";
+import { useEffect, useState } from "react";
 import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card";
 import { Button } from "@/components/ui/button";
-import { Badge } from "@/components/ui/badge";
 import { Progress } from "@/components/ui/progress";
-import { 
-  ArrowLeft, 
-  Star, 
-  GitFork, 
-  Calendar, 
-  CheckCircle2, 
-  AlertCircle, 
-  XCircle,
-  TrendingUp,
-  Code,
-  Shield,
-  Zap,
-  FileText,
-  Users
-} from "lucide-react";
+import { ArrowLeft, Code, FileText, Zap, Shield, Search, Accessibility, Loader2 } from "lucide-react";
 import AppNavbar from "@/components/AppNavbar";
 
-// Mock detailed repo data
-const mockRepoDetail = {
-  id: "1",
-  repository: "facebook/react",
-  description: "The library for web and native user interfaces",
-  overallScore: 92,
-  stars: 234567,
-  forks: 48392,
-  lastAnalyzed: "2024-01-15",
-  techStack: ["JavaScript", "TypeScript", "React", "Node.js"],
-  scoreBreakdown: {
-    codeQuality: { score: 95, max: 100, description: "Excellent code structure and maintainability" },
-    performance: { score: 88, max: 100, description: "Good performance with minor optimization opportunities" },
-    security: { score: 94, max: 100, description: "Strong security practices with regular updates" },
-    documentation: { score: 90, max: 100, description: "Comprehensive documentation with examples" },
-    community: { score: 96, max: 100, description: "Very active community and contributions" },
-    innovation: { score: 85, max: 100, description: "Solid innovation with emerging patterns" }
-  },
-  insights: [
-    {
-      type: "positive",
-      title: "Excellent Test Coverage", 
-      description: "95% test coverage with comprehensive unit and integration tests"
-    },
-    {
-      type: "positive",
-      title: "Active Maintenance",
-      description: "Regular updates and quick response to security issues"
-    },
-    {
-      type: "warning",
-      title: "Bundle Size",
-      description: "Consider optimizing bundle size for better performance"
-    },
-    {
-      type: "suggestion",
-      title: "TypeScript Migration",
-      description: "Some legacy files could benefit from TypeScript conversion"
-    }
-  ]
-};
+interface RepoResponse {
+  repoScore: number;
+  codeScore: number;
+  status: "completed" | "in_progress";
+  readmeScore: number;
+  accessibilityScore: number;
+  seoScore: number;
+  bestPracticeScore: number;
+  performanceScore: number;
+  repoReasoning: string;
+  codeReasoning: string;
+  readmeReasoning: string;
+}
 
 const getScoreColor = (score: number) => {
-  if (score >= 90) return "text-green-500";
+  if (score >= 85) return "text-green-500";
   if (score >= 70) return "text-yellow-500";
   return "text-red-500";
 };
 
-const getInsightIcon = (type: string) => {
-  switch (type) {
-    case "positive": return <CheckCircle2 className="w-5 h-5 text-green-500" />;
-    case "warning": return <AlertCircle className="w-5 h-5 text-yellow-500" />;
-    case "error": return <XCircle className="w-5 h-5 text-red-500" />;
-    default: return <CheckCircle2 className="w-5 h-5 text-blue-500" />;
-  }
-};
-
 const RepoDetail = () => {
-  const { id } = useParams();
-  const repo = mockRepoDetail; // In real app, fetch by id
+  const { id } = useParams<{ id: string }>();
+  const [repo, setRepo] = useState<RepoResponse | null>(null);
+  const [loading, setLoading] = useState(true);
+
+  useEffect(() => {
+    const fetchRepoDetail = async () => {
+      try {
+        const res = await fetch(
+          `${import.meta.env.VITE_WAITLIST_URL}/hackathon/score/${id}`
+        );
+        if (!res.ok) throw new Error("Failed to fetch repo details");
+        const data: RepoResponse = await res.json();
+        setRepo(data);
+      } catch (err) {
+        console.error("Error fetching repo details:", err);
+      } finally {
+        setLoading(false);
+      }
+    };
+
+    if (id) fetchRepoDetail();
+  }, [id]);
+
+  if (loading) {
+    return <div className="min-h-screen flex items-center justify-center">Loading…</div>;
+  }
+
+  if (!repo) {
+    return <div className="min-h-screen flex items-center justify-center">No data found.</div>;
+  }
 
   return (
     <div className="min-h-screen bg-background">
       <AppNavbar />
-      
       <div className="pt-20 pb-12">
         <div className="container mx-auto px-6">
-          {/* Header */}
-          <motion.div
-            initial={{ opacity: 0, y: 20 }}
-            animate={{ opacity: 1, y: 0 }}
-            transition={{ duration: 0.6 }}
-            className="mb-8"
-          >
-            <div className="flex items-center gap-4 mb-6">
-              <Button variant="ghost" size="sm" asChild>
-                <Link to="/scored-repos">
-                  <ArrowLeft className="w-4 h-4 mr-2" />
-                  Back to Repos
-                </Link>
-              </Button>
-            </div>
-            
-            <div className="flex flex-col lg:flex-row lg:items-center lg:justify-between gap-6">
-              <div>
-                <h1 className="text-4xl font-bold mb-3">
-                  {repo.repository}
-                </h1>
-                <p className="text-xl text-muted-foreground mb-4">
-                  {repo.description}
-                </p>
-                <div className="flex items-center gap-6 text-sm text-muted-foreground">
-                  <div className="flex items-center gap-1">
-                    <Star className="w-4 h-4" />
-                    {repo.stars.toLocaleString()}
-                  </div>
-                  <div className="flex items-center gap-1">
-                    <GitFork className="w-4 h-4" />
-                    {repo.forks.toLocaleString()}
-                  </div>
-                  <div className="flex items-center gap-1">
-                    <Calendar className="w-4 h-4" />
-                    Last analyzed: {repo.lastAnalyzed}
-                  </div>
-                </div>
-              </div>
-              
-              <div className="text-center">
-                <div className={`text-6xl font-bold mb-2 ${getScoreColor(repo.overallScore)}`}>
-                  {repo.overallScore}
-                </div>
-                <div className="text-lg text-muted-foreground">Overall Score</div>
-              </div>
-            </div>
-            
-            <div className="flex flex-wrap gap-2 mt-4">
-              {repo.techStack.map((tech) => (
-                <Badge key={tech} variant="secondary">
-                  {tech}
-                </Badge>
-              ))}
-            </div>
-          </motion.div>
+          <div className="flex items-center gap-4 mb-6">
+            <Button variant="ghost" size="sm" asChild>
+              <Link to="/scored-repos">
+                <ArrowLeft className="w-4 h-4 mr-2" />
+                Back to Repos
+              </Link>
+            </Button>
+          </div>
 
-          {/* Score Breakdown */}
-          <motion.div
-            initial={{ opacity: 0, y: 20 }}
-            animate={{ opacity: 1, y: 0 }}
-            transition={{ duration: 0.6, delay: 0.1 }}
-            className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6 mb-8"
-          >
-            {Object.entries(repo.scoreBreakdown).map(([key, data]) => {
-              const icons = {
-                codeQuality: Code,
-                performance: Zap,
-                security: Shield,
-                documentation: FileText,
-                community: Users,
-                innovation: TrendingUp
-              };
-              const Icon = icons[key as keyof typeof icons] || Code;
-              
-              return (
-                <Card key={key} className="card-glow">
-                  <CardHeader className="pb-3">
-                    <CardTitle className="text-lg flex items-center gap-2">
-                      <Icon className="w-5 h-5" />
-                      {key.charAt(0).toUpperCase() + key.slice(1).replace(/([A-Z])/g, ' $1')}
+          {repo.status === "in_progress" ? (
+            // 🚧 Pending State
+            <div className="flex flex-col items-center justify-center text-center py-20">
+              <Loader2 className="w-12 h-12 animate-spin text-primary mb-6" />
+              <h2 className="text-2xl font-bold mb-2">Analysis in Progress</h2>
+              <p className="text-muted-foreground max-w-md">
+                Your repository is still being analyzed. Please check back in a few minutes.
+              </p>
+            </div>
+          ) : (
+            // ✅ Completed State
+            <>
+              {/* Overall Score */}
+              <div className="text-center mb-12">
+                <div className={`text-6xl font-bold mb-2 ${getScoreColor(repo.repoScore)}`}>
+                  {repo.repoScore}
+                </div>
+                <p className="text-lg text-muted-foreground">Overall Repository Score</p>
+                <p className="mt-2 text-muted-foreground">{repo.repoReasoning}</p>
+              </div>
+
+              {/* Breakdown */}
+              <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6">
+                <Card>
+                  <CardHeader>
+                    <CardTitle className="flex items-center gap-2">
+                      <Code className="w-5 h-5" /> Code Quality
                     </CardTitle>
                   </CardHeader>
                   <CardContent>
-                    <div className="flex items-center justify-between mb-3">
-                      <span className={`text-2xl font-bold ${getScoreColor(data.score)}`}>
-                        {data.score}
-                      </span>
-                      <span className="text-sm text-muted-foreground">
-                        / {data.max}
-                      </span>
-                    </div>
-                    <Progress value={data.score} className="mb-3" />
-                    <p className="text-sm text-muted-foreground">
-                      {data.description}
+                    <Progress value={repo.codeScore} className="mb-3" />
+                    <p className={`text-xl font-bold ${getScoreColor(repo.codeScore)}`}>
+                      {repo.codeScore}
+                    </p>
+                    <p className="text-sm text-muted-foreground">{repo.codeReasoning}</p>
+                  </CardContent>
+                </Card>
+
+                <Card>
+                  <CardHeader>
+                    <CardTitle className="flex items-center gap-2">
+                      <FileText className="w-5 h-5" /> README
+                    </CardTitle>
+                  </CardHeader>
+                  <CardContent>
+                    <Progress value={repo.readmeScore} className="mb-3" />
+                    <p className={`text-xl font-bold ${getScoreColor(repo.readmeScore)}`}>
+                      {repo.readmeScore}
+                    </p>
+                    <p className="text-sm text-muted-foreground">{repo.readmeReasoning}</p>
+                  </CardContent>
+                </Card>
+
+                <Card>
+                  <CardHeader>
+                    <CardTitle className="flex items-center gap-2">
+                      <Accessibility className="w-5 h-5" /> Accessibility
+                    </CardTitle>
+                  </CardHeader>
+                  <CardContent>
+                    <Progress value={repo.accessibilityScore} className="mb-3" />
+                    <p className={`text-xl font-bold ${getScoreColor(repo.accessibilityScore)}`}>
+                      {repo.accessibilityScore}
                     </p>
                   </CardContent>
                 </Card>
-              );
-            })}
-          </motion.div>
 
-          {/* Insights */}
-          <motion.div
-            initial={{ opacity: 0, y: 20 }}
-            animate={{ opacity: 1, y: 0 }}
-            transition={{ duration: 0.6, delay: 0.2 }}
-          >
-            <h2 className="text-2xl font-bold mb-6">Analysis Insights</h2>
-            <div className="grid gap-4">
-              {repo.insights.map((insight, index) => (
-                <Card key={index} className="card-glow">
-                  <CardContent className="p-6">
-                    <div className="flex items-start gap-4">
-                      {getInsightIcon(insight.type)}
-                      <div>
-                        <h3 className="font-semibold mb-2">{insight.title}</h3>
-                        <p className="text-muted-foreground">{insight.description}</p>
-                      </div>
-                    </div>
+                <Card>
+                  <CardHeader>
+                    <CardTitle className="flex items-center gap-2">
+                      <Search className="w-5 h-5" /> SEO
+                    </CardTitle>
+                  </CardHeader>
+                  <CardContent>
+                    <Progress value={repo.seoScore} className="mb-3" />
+                    <p className={`text-xl font-bold ${getScoreColor(repo.seoScore)}`}>
+                      {repo.seoScore}
+                    </p>
                   </CardContent>
                 </Card>
-              ))}
-            </div>
-          </motion.div>
+
+                <Card>
+                  <CardHeader>
+                    <CardTitle className="flex items-center gap-2">
+                      <Shield className="w-5 h-5" /> Best Practices
+                    </CardTitle>
+                  </CardHeader>
+                  <CardContent>
+                    <Progress value={repo.bestPracticeScore} className="mb-3" />
+                    <p className={`text-xl font-bold ${getScoreColor(repo.bestPracticeScore)}`}>
+                      {repo.bestPracticeScore}
+                    </p>
+                  </CardContent>
+                </Card>
+
+                <Card>
+                  <CardHeader>
+                    <CardTitle className="flex items-center gap-2">
+                      <Zap className="w-5 h-5" /> Performance
+                    </CardTitle>
+                  </CardHeader>
+                  <CardContent>
+                    <Progress value={repo.performanceScore} className="mb-3" />
+                    <p className={`text-xl font-bold ${getScoreColor(repo.performanceScore)}`}>
+                      {repo.performanceScore}
+                    </p>
+                  </CardContent>
+                </Card>
+              </div>
+            </>
+          )}
         </div>
       </div>
     </div>
