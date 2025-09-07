@@ -4,6 +4,7 @@ import { Card, CardContent } from "@/components/ui/card";
 import { Button } from "@/components/ui/button";
 import { Input } from "@/components/ui/input";
 import { Github, ArrowRight, Loader2, CheckCircle2 } from "lucide-react";
+import AppNavbar from "@/components/AppNavbar";
 
 const RepositoryInfo = () => {
   const [repoUrl, setRepoUrl] = useState("");
@@ -34,7 +35,9 @@ const RepositoryInfo = () => {
   };
 
   return (
-    <div className="min-h-screen flex items-center justify-center bg-background px-4">
+    <div className="min-h-screen bg-background">
+      <AppNavbar />
+      <div className="flex items-center justify-center min-h-screen px-4 pt-20">
       <motion.div
         initial={{ opacity: 0, y: 30 }}
         animate={{ opacity: 1, y: 0 }}
@@ -116,6 +119,7 @@ const RepositoryInfo = () => {
           </Card>
         )}
       </motion.div>
+      </div>
     </div>
   );
 };

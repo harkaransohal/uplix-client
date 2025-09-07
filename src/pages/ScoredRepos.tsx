@@ -1,8 +1,10 @@
 import { motion } from "framer-motion";
+import { Card, CardContent, CardHeader, CardTitle, CardDescription } from "@/components/ui/card";
 import { Button } from "@/components/ui/button";
-import { Card, CardContent, CardDescription, CardHeader, CardTitle } from "@/components/ui/card";
 import { Badge } from "@/components/ui/badge";
-import { ArrowRight, Github, Star, GitBranch, Calendar } from "lucide-react";
+import { Star, GitFork, Calendar, ExternalLink, Plus, Download, Github } from "lucide-react";
+import { Link } from "react-router-dom";
+import AppNavbar from "@/components/AppNavbar";
 
 // Mock data for scored repositories
 const mockScoredRepos = [
@@ -61,31 +63,10 @@ const getScoreColor = (score: number) => {
 
 const ScoredRepos = () => {
   return (
-    <div className="min-h-screen bg-gradient-to-br from-background via-background to-muted/20">
-      {/* Header */}
-      <motion.header 
-        initial={{ opacity: 0, y: -20 }}
-        animate={{ opacity: 1, y: 0 }}
-        transition={{ duration: 0.6 }}
-        className="border-b border-border bg-background/80 backdrop-blur-xl"
-      >
-        <div className="container mx-auto px-6 py-4">
-          <div className="flex items-center justify-between">
-            <motion.div 
-              className="text-2xl font-bold gradient-text"
-              whileHover={{ scale: 1.05 }}
-            >
-              Uplix
-            </motion.div>
-            <div className="text-muted-foreground font-medium">
-              Your Scored Repositories
-            </div>
-          </div>
-        </div>
-      </motion.header>
-
-      {/* Main Content */}
-      <div className="container mx-auto px-6 py-12">
+    <div className="min-h-screen bg-background">
+      <AppNavbar />
+      <div className="pt-20 pb-12">
+        <div className="container mx-auto px-6">
         <motion.div
           initial={{ opacity: 0, y: 20 }}
           animate={{ opacity: 1, y: 0 }}
@@ -154,7 +135,7 @@ const ScoredRepos = () => {
                         <span>{repo.stars}</span>
                       </div>
                       <div className="flex items-center gap-1">
-                        <GitBranch className="w-4 h-4" />
+                        <GitFork className="w-4 h-4" />
                         <span>{repo.forks}</span>
                       </div>
                     </div>
@@ -166,11 +147,15 @@ const ScoredRepos = () => {
 
                   {/* View Details Button */}
                   <Button 
-                    className="w-full mt-4 group"
+                    size="sm" 
                     variant="outline"
+                    className="flex items-center gap-2 hover:bg-primary/10"
+                    asChild
                   >
-                    <span>View Details</span>
-                    <ArrowRight className="w-4 h-4 ml-2 transition-transform group-hover:translate-x-1" />
+                    <Link to={`/scored-repos/${repo.id}`}>
+                      <ExternalLink className="w-4 h-4" />
+                      View Details
+                    </Link>
                   </Button>
                 </CardContent>
               </Card>
@@ -178,27 +163,30 @@ const ScoredRepos = () => {
           ))}
         </motion.div>
 
-        {/* Action Buttons */}
-        <motion.div
-          initial={{ opacity: 0, y: 20 }}
-          animate={{ opacity: 1, y: 0 }}
-          transition={{ duration: 0.6, delay: 0.4 }}
-          className="text-center"
-        >
-          <Button 
-            size="lg" 
-            className="btn-primary rounded-full px-8 py-3 text-lg font-semibold mr-4"
+          {/* Action Buttons */}
+          <motion.div
+            initial={{ opacity: 0, y: 20 }}
+            animate={{ opacity: 1, y: 0 }}
+            transition={{ duration: 0.6, delay: 0.4 }}
+            className="text-center"
           >
-            Add New Repository
-          </Button>
-          <Button 
-            size="lg" 
-            variant="outline" 
-            className="rounded-full px-8 py-3 text-lg"
-          >
-            Export Report
-          </Button>
-        </motion.div>
+            <Button 
+              size="lg" 
+              className="btn-primary rounded-full px-8 py-3 text-lg font-semibold mr-4"
+            >
+              <Plus className="w-5 h-5 mr-2" />
+              Add New Repository
+            </Button>
+            <Button 
+              size="lg" 
+              variant="outline" 
+              className="rounded-full px-8 py-3 text-lg"
+            >
+              <Download className="w-5 h-5 mr-2" />
+              Export Report
+            </Button>
+          </motion.div>
+        </div>
       </div>
     </div>
   );

@@ -1,8 +1,9 @@
 import { motion } from "framer-motion";
+import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card";
 import { Button } from "@/components/ui/button";
-import { Card, CardContent, CardDescription, CardHeader, CardTitle } from "@/components/ui/card";
 import { Badge } from "@/components/ui/badge";
-import { ArrowRight, Mail, Calendar, User, MapPin, Download } from "lucide-react";
+import { Calendar, Users, TrendingUp, Download, Mail, Globe } from "lucide-react";
+import AppNavbar from "@/components/AppNavbar";
 
 // Mock data for waitlist entries
 const mockWaitlistEntries = [
@@ -89,31 +90,10 @@ const getReferralColor = (source: string) => {
 
 const Waitlist = () => {
   return (
-    <div className="min-h-screen bg-gradient-to-br from-background via-background to-muted/20">
-      {/* Header */}
-      <motion.header 
-        initial={{ opacity: 0, y: -20 }}
-        animate={{ opacity: 1, y: 0 }}
-        transition={{ duration: 0.6 }}
-        className="border-b border-border bg-background/80 backdrop-blur-xl"
-      >
-        <div className="container mx-auto px-6 py-4">
-          <div className="flex items-center justify-between">
-            <motion.div 
-              className="text-2xl font-bold gradient-text"
-              whileHover={{ scale: 1.05 }}
-            >
-              Uplix
-            </motion.div>
-            <div className="text-muted-foreground font-medium">
-              Waitlist Management
-            </div>
-          </div>
-        </div>
-      </motion.header>
-
-      {/* Main Content */}
-      <div className="container mx-auto px-6 py-12">
+    <div className="min-h-screen bg-background">
+      <AppNavbar />
+      <div className="pt-20 pb-12">
+        <div className="container mx-auto px-6">
         <motion.div
           initial={{ opacity: 0, y: 20 }}
           animate={{ opacity: 1, y: 0 }}
@@ -164,13 +144,13 @@ const Waitlist = () => {
                   <div className="flex items-start justify-between">
                     <div className="flex-1">
                       <CardTitle className="text-xl mb-2 flex items-center gap-2">
-                        <User className="w-5 h-5 text-muted-foreground" />
+                        <Users className="w-5 h-5 text-muted-foreground" />
                         {entry.name}
                       </CardTitle>
-                      <CardDescription className="text-sm flex items-center gap-1">
+                      <div className="text-sm flex items-center gap-1 text-muted-foreground">
                         <Mail className="w-4 h-4" />
                         {entry.email}
-                      </CardDescription>
+                      </div>
                     </div>
                     <div className={`rounded-full px-3 py-1 text-sm font-semibold border ${getPositionColor(entry.position)}`}>
                       #{entry.position}
@@ -182,7 +162,7 @@ const Waitlist = () => {
                   {/* Location and Date */}
                   <div className="space-y-2">
                     <div className="flex items-center gap-2 text-sm text-muted-foreground">
-                      <MapPin className="w-4 h-4" />
+                      <Globe className="w-4 h-4" />
                       <span>{entry.location}</span>
                     </div>
                     <div className="flex items-center gap-2 text-sm text-muted-foreground">
@@ -217,7 +197,7 @@ const Waitlist = () => {
                     variant="outline"
                   >
                     <span>Contact User</span>
-                    <ArrowRight className="w-4 h-4 ml-2 transition-transform group-hover:translate-x-1" />
+                    <Mail className="w-4 h-4 ml-2 transition-transform group-hover:translate-x-1" />
                   </Button>
                 </CardContent>
               </Card>
@@ -225,28 +205,29 @@ const Waitlist = () => {
           ))}
         </motion.div>
 
-        {/* Action Buttons */}
-        <motion.div
-          initial={{ opacity: 0, y: 20 }}
-          animate={{ opacity: 1, y: 0 }}
-          transition={{ duration: 0.6, delay: 0.4 }}
-          className="text-center"
-        >
-          <Button 
-            size="lg" 
-            className="btn-primary rounded-full px-8 py-3 text-lg font-semibold mr-4"
+          {/* Action Buttons */}
+          <motion.div
+            initial={{ opacity: 0, y: 20 }}
+            animate={{ opacity: 1, y: 0 }}
+            transition={{ duration: 0.6, delay: 0.4 }}
+            className="text-center"
           >
-            <Download className="w-5 h-5 mr-2" />
-            Export CSV
-          </Button>
-          <Button 
-            size="lg" 
-            variant="outline" 
-            className="rounded-full px-8 py-3 text-lg"
-          >
-            Send Update Email
-          </Button>
-        </motion.div>
+            <Button 
+              size="lg" 
+              className="btn-primary rounded-full px-8 py-3 text-lg font-semibold mr-4"
+            >
+              <Download className="w-5 h-5 mr-2" />
+              Export CSV
+            </Button>
+            <Button 
+              size="lg" 
+              variant="outline" 
+              className="rounded-full px-8 py-3 text-lg"
+            >
+              Send Update Email
+            </Button>
+          </motion.div>
+        </div>  
       </div>
     </div>
   );
