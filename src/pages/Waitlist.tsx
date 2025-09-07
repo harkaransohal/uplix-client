@@ -27,7 +27,7 @@ const Waitlist = () => {
   useEffect(() => {
     const fetchWaitlist = async () => {
       try {
-        const { data } = await axios.get("http://localhost:5000/hackathon/waitlist")
+        const { data } = await axios.get(`${import.meta.env.VITE_WAITLIST_URL}/hackathon/waitlist`)
         setTotalCount(data.total_count)
         setWaitlistEntries(data?.data || [])
       } catch (error) {
